@@ -32,6 +32,10 @@ const OrderScreen = () => {
     );
   }
 
+  const reactPayPalButtonV2 = () => {
+    console.log("reactPayPalButtonV2");
+  };
+
   useEffect(() => {
     dispatch(getOrderDetails(orderId));
   }, [dispatch, orderId]);
@@ -143,6 +147,17 @@ const OrderScreen = () => {
                 <Row>
                   <Col>Total</Col>
                   <Col>${order.totalPrice}</Col>
+                </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Button
+                    type="button"
+                    variant="dark"
+                    onClick={() => reactPayPalButtonV2()}
+                  >
+                    reactPayPalButtonV2
+                  </Button>
                 </Row>
               </ListGroup.Item>
             </ListGroup>
