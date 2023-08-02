@@ -5,7 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 
-import { getOrderDetails } from "../actions/orderActions";
+import { getOrderDetails, deliverOrder } from "../actions/orderActions";
+
+import { ORDER_DELIVER_RESET } from "../constants/orderConstants";
 
 const OrderScreen = () => {
   let { id } = useParams();
@@ -20,6 +22,16 @@ const OrderScreen = () => {
   const { order, loading, error } = orderDetails;
 
   //   console.log("order: ", order);
+
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const {
+    loading: loadingDeliver,
+    error: errorLoading,
+    success: successDeliver,
+  } = orderDeliver;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   if (!loading) {
     // Calculate Prices
@@ -37,8 +49,18 @@ const OrderScreen = () => {
   };
 
   useEffect(() => {
-    dispatch(getOrderDetails(orderId));
-  }, [dispatch, orderId]);
+    if (!userInfo) {
+      navigate("/login");
+    }
+    if (!order || successDeliver) {
+      dispatch({ type: ORDER_DELIVER_RESET });
+      dispatch(getOrderDetails(orderId));
+    }
+  }, [dispatch, navigate, orderId, successDeliver, order]);
+
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order));
+  };
 
   return loading ? (
     <Loader />
@@ -160,6 +182,24 @@ const OrderScreen = () => {
                   </Button>
                 </Row>
               </ListGroup.Item>
+
+              {loadingDeliver && <Loader />}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroup.Item>
+                    <Row>
+                      <Button
+                        type="button"
+                        className="btn btn-block"
+                        onClick={deliverHandler}
+                      >
+                        Mark As Delivered
+                      </Button>
+                    </Row>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>
