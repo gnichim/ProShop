@@ -43,6 +43,7 @@ const App = () => {
             />
             <Route path="/admin/productlist" element={<ProductListScreen />} />
             <Route path="/admin/orderlist" element={<OrderListScreen />} />
+            <Route path="/search/:keyword" element={<HomeScreen />} />
             <Route path="/" element={<HomeScreen />} exact />
           </Routes>
         </Container>

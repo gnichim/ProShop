@@ -26,7 +26,7 @@ const OrderScreen = () => {
   const orderDeliver = useSelector((state) => state.orderDeliver);
   const {
     loading: loadingDeliver,
-    error: errorLoading,
+    error: errorDeliver,
     success: successDeliver,
   } = orderDeliver;
 
@@ -49,6 +49,7 @@ const OrderScreen = () => {
   };
 
   useEffect(() => {
+    console.log("order: ", order);
     if (!userInfo) {
       navigate("/login");
     }
@@ -56,7 +57,8 @@ const OrderScreen = () => {
       dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(getOrderDetails(orderId));
     }
-  }, [dispatch, navigate, orderId, successDeliver, order]);
+    // window.location.reload();
+  }, [dispatch, navigate, orderId, successDeliver, order, userInfo]);
 
   const deliverHandler = () => {
     dispatch(deliverOrder(order));
@@ -184,6 +186,9 @@ const OrderScreen = () => {
               </ListGroup.Item>
 
               {loadingDeliver && <Loader />}
+              {errorDeliver && (
+                <Message variant="danger">{errorDeliver}</Message>
+              )}
               {userInfo &&
                 userInfo.isAdmin &&
                 order.isPaid &&

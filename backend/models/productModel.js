@@ -6,6 +6,12 @@ const reviewSchema = mongoose.Schema(
     name: { type: String, required: true },
     rating: { type: Number, required: true },
     comment: { type: String, required: true },
+    user: {
+      // To know which user created which review
+      type: mongoose.Schema.Types.ObjectId, // Object ID
+      required: true,
+      ref: "User", // Reference a specefic model (which is the User)
+    },
   },
   {
     timestamps: true,
